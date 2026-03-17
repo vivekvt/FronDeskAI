@@ -388,7 +388,7 @@ export default function LandingPage() {
               <Phone className="size-3 text-primary-foreground" />
             </div>
             <span className="font-semibold text-foreground">FrontDeskAI</span>
-            <span>— Built for the Cursor Hackathon, Waterloo 2026</span>
+            <span>— Built with Cursor for the Cursor Hackathon, Waterloo 2026</span>
           </div>
           <div className="flex items-center gap-4">
             <Link href="/dashboard" className="hover:text-foreground transition-colors">
