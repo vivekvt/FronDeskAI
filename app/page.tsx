@@ -84,16 +84,16 @@ function PhoneCallDemo() {
 
         {/* Audio waveform */}
         <div className="flex items-center gap-[3px]">
-          {Array.from({ length: 24 }).map((_, i) => (
-            <div
-              key={i}
-              className="w-[3px] rounded-full bg-emerald-400/60"
-              style={{
-                height: `${8 + Math.sin(i * 0.8 + seconds * 2) * 6 + Math.random() * 4}px`,
-                transition: "height 0.3s ease",
-              }}
-            />
-          ))}
+          {Array.from({ length: 24 }).map((_, i) => {
+            const base = 8 + Math.sin(i * 0.8 + seconds * 2) * 6 + Math.sin(i * 1.3 + seconds * 3.7) * 3;
+            return (
+              <div
+                key={i}
+                className="w-[3px] rounded-full bg-emerald-400/60 transition-[height] duration-300 ease-in-out"
+                style={{ height: `${base}px` }}
+              />
+            );
+          })}
         </div>
       </div>
 
