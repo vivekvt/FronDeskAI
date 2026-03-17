@@ -17,7 +17,7 @@ export const businessConfig = {
   name: "FreshCut",
   title: "Modern Barbershop in Waterloo",
   about:
-    "FreshCut is a modern barbershop in the heart of Waterloo. We keep it simple — great haircuts, clean beard work, and a relaxed atmosphere.",
+    "FreshCut is a modern barbershop in the heart of Waterloo. We keep it simple. Great haircuts, clean beard work, and a relaxed atmosphere.",
   phone: "+1 (867) 679-1431",
   address: "258 King Street North, Waterloo, ON N2J 2Y9, Canada",
   services: [

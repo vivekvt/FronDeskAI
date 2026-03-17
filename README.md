@@ -11,7 +11,7 @@ An AI-powered front desk voice agent that answers phone calls and books appointm
 1. A customer calls the Twilio phone number **(867) 679-1431**
 2. ElevenLabs voice agent (Clara) answers and collects name, service, and preferred date
 3. Agent calls `/api/agent/check-availability` to fetch open slots for that day
-4. Clara reads back available times — caller picks one
+4. Clara reads back available times, caller picks one
 5. Agent calls `/api/agent/book-appointment` to confirm the booking
 6. Appointment is saved to Firestore and appears live on the dashboard
 
@@ -96,8 +96,8 @@ NEXT_PUBLIC_FIREBASE_APP_ID=
 
 ## Business Config
 
-The business name, services, hours, and phone number are hardcoded in [`lib/business-config.ts`](lib/business-config.ts). Edit that file to change anything — the dashboard settings page and the agent instruction both pull from it.
+The business name, services, hours, and phone number are hardcoded in [`lib/business-config.ts`](lib/business-config.ts). Edit that file to change anything. The dashboard settings page and the agent instruction both pull from it.
 
 ---
 
-*Built for the Cursor Hackathon — Waterloo, ON 2026*
+*Built with Cursor for the Cursor Hackathon, Waterloo, ON 2026*

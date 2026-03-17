@@ -159,7 +159,7 @@ export function AppointmentCard({ appointment, onStatusChange }: AppointmentCard
             </span>
           </div>
 
-          {/* Actions — always visible */}
+          {/* Actions */}
           <div className="flex shrink-0 items-center gap-1">
             {ACTIONS[status].map(({ status: next, label, icon: Icon, style }) => (
               <button

@@ -150,7 +150,7 @@ function Slide1({ active }: { active: boolean }) {
 
         <FadeIn active={active} delay={400}>
           <p className="mt-6 text-lg text-gray-400 md:text-xl">
-            Your barber, your dentist, your salon — they&apos;re all too busy to pick up the phone.
+            Your barber, your dentist, your salon. They&apos;re all too busy to pick up the phone.
           </p>
         </FadeIn>
 
@@ -200,7 +200,7 @@ function Slide2({ active }: { active: boolean }) {
 
         <FadeIn active={active} delay={300}>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-400 md:text-xl">
-            An AI voice agent that answers your phone, books appointments, and fills your calendar — 24/7.
+            An AI voice agent that answers your phone, books appointments, and fills your calendar. 24/7.
           </p>
         </FadeIn>
 
@@ -362,7 +362,7 @@ function Slide4({ active }: { active: boolean }) {
 
         <FadeIn active={active} delay={500}>
           <p className="mt-10 text-sm text-gray-400">
-            Ask Clara to book a haircut — watch it appear on the dashboard in real time.
+            Ask Clara to book a haircut. Watch it appear on the dashboard in real time.
           </p>
         </FadeIn>
 
@@ -372,7 +372,7 @@ function Slide4({ active }: { active: boolean }) {
             <span className="size-1 rounded-full bg-gray-300" />
             <span>Built with Cursor</span>
             <span className="size-1 rounded-full bg-gray-300" />
-            <span>Cursor Hackathon — Waterloo 2026</span>
+            <span>Cursor Hackathon, Waterloo 2026</span>
           </div>
         </FadeIn>
       </div>

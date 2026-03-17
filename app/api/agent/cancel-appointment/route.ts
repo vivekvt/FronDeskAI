@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Multiple appointments — return the list so the agent can ask which one
+    // Multiple appointments: return the list so the agent can ask which one
     if (snapshot.size > 1) {
       const appointments = snapshot.docs.map((d) => {
         const data = d.data();
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Exactly one match — cancel it
+    // Exactly one match: cancel it
     const apptDoc = snapshot.docs[0];
     const apptData = apptDoc.data();
 

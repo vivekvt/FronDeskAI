@@ -125,7 +125,7 @@ export default function LandingPage() {
           </h1>
 
           <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-            FrontDeskAI answers your phone 24/7, books appointments in real time, and keeps your calendar full — without hiring a single person.
+            FrontDeskAI answers your phone 24/7, books appointments in real time, and keeps your calendar full. No extra hires needed.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -229,7 +229,7 @@ export default function LandingPage() {
               step="1"
               icon={Phone}
               title="Customer calls"
-              description="Your AI agent answers instantly, day or night — no hold music, no voicemail."
+              description="Your AI agent answers instantly, day or night. No hold music, no voicemail."
             />
             <StepCard
               step="2"
@@ -272,7 +272,7 @@ export default function LandingPage() {
             <FeatureCard
               icon={Zap}
               title="Real-time dashboard"
-              description="Firebase Firestore keeps your appointments list live — no refresh needed. See new bookings the second they come in."
+              description="Firebase Firestore keeps your appointments list live. No refresh needed. See new bookings the second they come in."
             />
             <FeatureCard
               icon={Shield}

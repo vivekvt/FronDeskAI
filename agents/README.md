@@ -1,6 +1,6 @@
 # Agent Configuration
 
-This folder contains the version-controlled source of truth for the ElevenLabs phone agent configuration. The actual live configuration lives on the ElevenLabs dashboard — update it there whenever you change these files.
+This folder contains the version-controlled source of truth for the ElevenLabs phone agent configuration. The actual live configuration lives on the ElevenLabs dashboard. Update it there whenever you change these files.
 
 ## Files
 
@@ -23,12 +23,12 @@ This folder contains the version-controlled source of truth for the ElevenLabs p
 
 1. Open your agent → **Configuration** tab
 2. Paste the full contents of `instruction.md` into the **System Prompt** field
-3. Set the agent's **Timezone** to `America/Toronto` — this ensures `{{system__time}}` returns Eastern Time so Clara resolves relative dates ("tomorrow", "this Friday") correctly
+3. Set the agent's **Timezone** to `America/Toronto`. This ensures `{{system__time}}` returns Eastern Time so Clara resolves relative dates ("tomorrow", "this Friday") correctly
 4. Save
 
 ### 3. Add Webhook Tools
 
-You need to add **two tools** — add them one at a time via **Tools** tab → **Add Tool** → **Webhook**.
+You need to add **two tools**. Add them one at a time via **Tools** tab → **Add Tool** → **Webhook**.
 
 Each tool's full JSON schema is in `tools.json`. You can use those as a reference when filling in the ElevenLabs form.
 
@@ -36,7 +36,7 @@ Each tool's full JSON schema is in `tools.json`. You can use those as a referenc
 - **Name:** `check_availability`
 - **URL:** `https://frondeskai-app.vercel.app/api/agent/check-availability`
 - **Method:** `POST`
-- **Parameters:** `appointmentDate` (string, required) — date in YYYY-MM-DD format
+- **Parameters:** `appointmentDate` (string, required), date in YYYY-MM-DD format
 
 Returns all open 30-minute slots for that day. Clara reads them back to the caller.
 
@@ -55,7 +55,7 @@ Called only after the caller has confirmed their chosen time slot.
 1. In your agent → **Telephony** tab
 2. Click **Add Phone Number** → **Twilio**
 3. Enter your Twilio Account SID, Auth Token, and the phone number you want to use
-4. ElevenLabs handles the Twilio integration fully — no Twilio SDK is needed in this project
+4. ElevenLabs handles the Twilio integration fully. No Twilio SDK is needed in this project
 
 ### 5. Test the Agent
 

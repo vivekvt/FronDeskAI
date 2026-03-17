@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
       notes?: string;
     };
 
-    // Required fields (customerPhone is optional — may be absent in test calls)
+    // Required fields (customerPhone is optional, may be absent in test calls)
     if (!customerName || !service || !appointmentDate || !appointmentTime) {
       return NextResponse.json(
         { success: false, reason: "Missing required fields: customer name, service, date, and time." },
