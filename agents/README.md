@@ -19,11 +19,12 @@ This folder contains the version-controlled source of truth for the ElevenLabs p
 2. Click **Create Agent**
 3. Choose a voice (e.g. Aria)
 
-### 2. Set the System Prompt
+### 2. Set the System Prompt & Timezone
 
 1. Open your agent → **Configuration** tab
 2. Paste the full contents of `instruction.md` into the **System Prompt** field
-3. Save
+3. Set the agent's **Timezone** to `America/Toronto` — this ensures `{{system__time}}` returns Eastern Time so Clara resolves relative dates ("tomorrow", "this Friday") correctly
+4. Save
 
 ### 3. Add Webhook Tools
 

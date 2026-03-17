@@ -110,15 +110,15 @@ export function AppointmentsList() {
       </div>
 
       {/* Filter tabs */}
-      <div className="flex shrink-0 items-center gap-1 border-b border-border bg-background px-6 py-2">
+      <div className="flex shrink-0 items-center gap-1 border-b border-border bg-background px-6 py-2.5">
         {FILTERS.map(({ label, value }) => (
           <button
             key={value}
             onClick={() => setFilter(value)}
             className={cn(
-              "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors",
+              "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors",
               filter === value
-                ? "bg-foreground text-background"
+                ? "bg-foreground text-background shadow-sm"
                 : "text-muted-foreground hover:bg-muted hover:text-foreground"
             )}
           >
@@ -133,15 +133,6 @@ export function AppointmentsList() {
             </span>
           </button>
         ))}
-
-        {/* Column labels — right side */}
-        <div className="ml-auto hidden items-center gap-4 pr-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/50 lg:flex">
-          <span className="w-40">Customer</span>
-          <span className="w-32">Service</span>
-          <span className="w-28 text-right">Date / Time</span>
-          <span className="w-20 text-right">Status</span>
-          <span className="w-24 text-right">Actions</span>
-        </div>
       </div>
 
       {/* List */}

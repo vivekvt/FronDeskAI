@@ -1,9 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import { format, parseISO, isToday, isTomorrow, isYesterday } from "date-fns";
-import { Phone, Check, X, RotateCcw } from "lucide-react";
+import { Phone, Check, X, RotateCcw, Clock, Scissors, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type Appointment, type AppointmentStatus } from "@/hooks/use-appointments";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 /* ── helpers ─────────────────────────────────────────────────────────── */
 
@@ -46,24 +56,24 @@ function fmt12(time: string) {
 
 const STATUS_CONFIG: Record<
   AppointmentStatus,
-  { bar: string; pill: string; label: string }
+  { stripe: string; pill: string; pillBg: string; label: string }
 > = {
-  upcoming:  { bar: "bg-blue-500",    pill: "bg-blue-50 text-blue-600 ring-blue-200",      label: "Upcoming"  },
-  completed: { bar: "bg-emerald-500", pill: "bg-emerald-50 text-emerald-600 ring-emerald-200", label: "Completed" },
-  cancelled: { bar: "bg-rose-400",    pill: "bg-rose-50 text-rose-500 ring-rose-200",       label: "Cancelled" },
+  upcoming:  { stripe: "bg-blue-500",    pill: "text-blue-700",    pillBg: "bg-blue-50 ring-1 ring-blue-200",        label: "Upcoming"  },
+  completed: { stripe: "bg-emerald-500", pill: "text-emerald-700", pillBg: "bg-emerald-50 ring-1 ring-emerald-200",  label: "Completed" },
+  cancelled: { stripe: "bg-rose-400",    pill: "text-rose-600",    pillBg: "bg-rose-50 ring-1 ring-rose-200",        label: "Cancelled" },
 };
 
 const ACTIONS: Record<AppointmentStatus, { status: AppointmentStatus; label: string; icon: React.ElementType; style: string }[]> = {
-  upcoming:  [
-    { status: "completed", label: "Complete", icon: Check, style: "hover:bg-emerald-50 hover:text-emerald-600" },
-    { status: "cancelled", label: "Cancel",   icon: X,     style: "hover:bg-rose-50 hover:text-rose-500"      },
+  upcoming: [
+    { status: "completed", label: "Complete", icon: Check,       style: "text-emerald-600 hover:bg-emerald-50" },
+    { status: "cancelled", label: "Cancel",   icon: X,           style: "text-rose-500 hover:bg-rose-50" },
   ],
   completed: [
-    { status: "cancelled", label: "Cancel",   icon: X,           style: "hover:bg-rose-50 hover:text-rose-500"    },
-    { status: "upcoming",  label: "Reopen",   icon: RotateCcw,   style: "hover:bg-blue-50 hover:text-blue-600"    },
+    { status: "cancelled", label: "Cancel",   icon: X,           style: "text-rose-500 hover:bg-rose-50" },
+    { status: "upcoming",  label: "Reopen",   icon: RotateCcw,   style: "text-blue-600 hover:bg-blue-50" },
   ],
   cancelled: [
-    { status: "upcoming",  label: "Restore",  icon: RotateCcw,   style: "hover:bg-blue-50 hover:text-blue-600"    },
+    { status: "upcoming",  label: "Restore",  icon: RotateCcw,   style: "text-blue-600 hover:bg-blue-50" },
   ],
 };
 
@@ -78,77 +88,122 @@ export function AppointmentCard({ appointment, onStatusChange }: AppointmentCard
   const { id, customerName, customerPhone, service, appointmentDate, appointmentTime, status, notes } = appointment;
   const cfg = STATUS_CONFIG[status];
   const color = avatarColor(customerName);
+  const [cancelOpen, setCancelOpen] = useState(false);
+
+  function handleAction(next: AppointmentStatus) {
+    if (next === "cancelled") {
+      setCancelOpen(true);
+      return;
+    }
+    onStatusChange(id, next);
+  }
+
+  function confirmCancel() {
+    onStatusChange(id, "cancelled");
+    setCancelOpen(false);
+  }
 
   return (
-    <div className="group relative flex items-stretch overflow-hidden rounded-xl border border-border bg-card transition-all duration-200 hover:border-border/80 hover:shadow-md hover:shadow-black/5">
-      {/* Left status stripe */}
-      <div className={cn("w-1 shrink-0", cfg.bar)} />
+    <>
+      <div className="group relative flex items-stretch overflow-hidden rounded-xl border border-border/60 bg-card shadow-sm transition-all duration-200 hover:border-border hover:shadow-md">
+        {/* Left status stripe */}
+        <div className={cn("w-1.5 shrink-0 rounded-l-xl", cfg.stripe)} />
 
-      {/* Content */}
-      <div className="flex flex-1 items-center gap-4 px-4 py-3.5">
-        {/* Avatar */}
-        <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white shadow-sm", color)}>
-          {initials(customerName)}
-        </div>
+        {/* Content */}
+        <div className="flex flex-1 items-center gap-5 px-5 py-4">
+          {/* Avatar */}
+          <div className={cn("flex size-11 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white shadow-sm", color)}>
+            {initials(customerName)}
+          </div>
 
-        {/* Customer info */}
-        <div className="w-40 shrink-0">
-          <p className="truncate text-sm font-semibold">{customerName}</p>
-          <a
-            href={`tel:${customerPhone}`}
-            className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <Phone className="size-2.5" />
-            {customerPhone}
-          </a>
-        </div>
-
-        {/* Service */}
-        <div className="hidden flex-1 sm:block">
-          <span className="inline-block rounded-md bg-muted px-2.5 py-1 text-xs font-medium">
-            {service}
-          </span>
-          {notes && (
-            <p className="mt-1 truncate text-[11px] text-muted-foreground">{notes}</p>
-          )}
-        </div>
-
-        {/* Date / time */}
-        <div className="hidden shrink-0 text-right md:block">
-          <p className="text-sm font-medium">{friendlyDate(appointmentDate)}</p>
-          <p className="text-xs text-muted-foreground">{fmt12(appointmentTime)}</p>
-        </div>
-
-        {/* Status pill */}
-        <div className="hidden shrink-0 lg:block">
-          <span className={cn("rounded-full px-2.5 py-1 text-xs font-semibold ring-1", cfg.pill)}>
-            {cfg.label}
-          </span>
-        </div>
-
-        {/* Actions — visible on hover */}
-        <div className="ml-auto flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-          {ACTIONS[status].map(({ status: next, label, icon: Icon, style }) => (
-            <button
-              key={next}
-              onClick={() => onStatusChange(id, next)}
-              title={label}
-              className={cn(
-                "flex items-center gap-1 rounded-md px-2 py-1.5 text-xs font-medium text-muted-foreground transition-colors",
-                style
+          {/* Customer info */}
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold">{customerName}</p>
+            <div className="mt-1 flex items-center gap-3">
+              {customerPhone && (
+                <a
+                  href={`tel:${customerPhone}`}
+                  className="flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <Phone className="size-3" />
+                  {customerPhone}
+                </a>
               )}
-            >
-              <Icon className="size-3" />
-              <span className="hidden xl:inline">{label}</span>
-            </button>
-          ))}
-        </div>
+            </div>
+          </div>
 
-        {/* ID */}
-        <span className="hidden shrink-0 font-mono text-[10px] text-muted-foreground/40 xl:block">
-          #{id.slice(0, 6)}
-        </span>
+          {/* Service chip */}
+          <div className="hidden shrink-0 sm:block">
+            <span className="inline-flex items-center gap-1.5 rounded-lg bg-muted/80 px-3 py-1.5 text-xs font-medium">
+              <Scissors className="size-3 text-muted-foreground" />
+              {service}
+            </span>
+            {notes && (
+              <p className="mt-1 max-w-[180px] truncate text-[11px] text-muted-foreground">{notes}</p>
+            )}
+          </div>
+
+          {/* Date / time */}
+          <div className="hidden shrink-0 text-right md:block">
+            <p className="text-sm font-semibold">{friendlyDate(appointmentDate)}</p>
+            <p className="mt-0.5 flex items-center justify-end gap-1 text-xs text-muted-foreground">
+              <Clock className="size-3" />
+              {fmt12(appointmentTime)}
+            </p>
+          </div>
+
+          {/* Status pill */}
+          <div className="shrink-0">
+            <span className={cn("inline-block rounded-full px-3 py-1 text-xs font-semibold", cfg.pillBg, cfg.pill)}>
+              {cfg.label}
+            </span>
+          </div>
+
+          {/* Actions — always visible */}
+          <div className="flex shrink-0 items-center gap-1">
+            {ACTIONS[status].map(({ status: next, label, icon: Icon, style }) => (
+              <button
+                key={next}
+                onClick={() => handleAction(next)}
+                title={label}
+                className={cn(
+                  "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors",
+                  style
+                )}
+              >
+                <Icon className="size-3.5" />
+                <span className="hidden xl:inline">{label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* Cancel confirmation dialog */}
+      <Dialog open={cancelOpen} onOpenChange={setCancelOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="mx-auto mb-2 flex size-12 items-center justify-center rounded-full bg-rose-50">
+              <AlertTriangle className="size-6 text-rose-500" />
+            </div>
+            <DialogTitle className="text-center">Cancel Appointment</DialogTitle>
+            <DialogDescription className="text-center">
+              Are you sure you want to cancel <span className="font-medium text-foreground">{customerName}</span>&apos;s{" "}
+              <span className="font-medium text-foreground">{service}</span> on{" "}
+              <span className="font-medium text-foreground">{friendlyDate(appointmentDate)}</span> at{" "}
+              <span className="font-medium text-foreground">{fmt12(appointmentTime)}</span>?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCancelOpen(false)}>
+              Keep it
+            </Button>
+            <Button variant="destructive" onClick={confirmCancel}>
+              Yes, cancel
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

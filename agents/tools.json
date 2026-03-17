@@ -152,5 +152,60 @@
   "dynamic_variables": {
     "dynamic_variable_placeholders": {}
   }
+},
+{
+  "type": "webhook",
+  "name": "cancel_appointment",
+  "description": "Cancels an upcoming appointment for the caller. Looks up appointments by the caller's phone number. If multiple are found, returns the list so you can ask the caller which one to cancel and call again with the specific date.",
+  "disable_interruptions": false,
+  "force_pre_tool_speech": "auto",
+  "tool_call_sound": null,
+  "tool_call_sound_behavior": "auto",
+  "tool_error_handling_mode": "auto",
+  "execution_mode": "immediate",
+  "api_schema": {
+    "url": "https://frondeskai-app.vercel.app/api/agent/cancel-appointment",
+    "method": "POST",
+    "path_params_schema": [],
+    "query_params_schema": [],
+    "request_body_schema": {
+      "id": "body",
+      "type": "object",
+      "description": "Cancel appointment request body",
+      "value_type": "llm_prompt",
+      "required": false,
+      "properties": [
+        {
+          "id": "customerPhone",
+          "type": "string",
+          "value_type": "llm_prompt",
+          "description": "The caller's phone number. Use the value from CALLER_PHONE in your system prompt exactly as-is.",
+          "dynamic_variable": "",
+          "constant_value": "",
+          "enum": null,
+          "is_system_provided": false,
+          "required": true
+        },
+        {
+          "id": "appointmentDate",
+          "type": "string",
+          "value_type": "llm_prompt",
+          "description": "Optional. Date of the appointment to cancel in YYYY-MM-DD format. Provide this when the caller has multiple upcoming appointments and specifies which one.",
+          "dynamic_variable": "",
+          "constant_value": "",
+          "enum": null,
+          "is_system_provided": false,
+          "required": false
+        }
+      ]
+    },
+    "request_headers": [],
+    "auth_connection": null
+  },
+  "assignments": [],
+  "response_timeout_secs": 20,
+  "dynamic_variables": {
+    "dynamic_variable_placeholders": {}
+  }
 }
 ]
