@@ -1,0 +1,72 @@
+---
+alwaysApply: true
+---
+# FrontDeskAI — Project Rules
+
+## Stack
+- **Next.js 16** App Router, TypeScript, Tailwind CSS v4, shadcn/ui
+- **Firebase Firestore** for appointments (collection: `appointments`)
+- **ElevenLabs** voice agent + **Twilio** phone number (no Twilio SDK in this project)
+
+## Key Files
+- `lib/business-config.ts` — single source of truth for business name, services, hours, phone
+- `lib/firebase.ts` — Firestore init (uses `getApps()` guard, safe on client + server)
+- `lib/appointments-db.ts` — all Firestore reads/writes live here, nowhere else
+- `hooks/use-appointments.ts` — real-time Firestore listener for dashboard
+- `agents/instruction.md` — ElevenLabs system prompt (version controlled)
+- `agents/tools.json` — ElevenLabs webhook tool schema (version controlled)
+
+## Conventions
+
+### Business config
+Always import from `lib/business-config.ts`. Never hardcode business name, phone, or hours anywhere else.
+
+### Firestore
+All Firestore calls go through `lib/appointments-db.ts`. Do not call Firestore directly from components or API routes.
+
+### API routes
+Two ElevenLabs webhook endpoints live under `app/api/agent/`:
+
+**`check-availability/route.ts`**
+- Accepts `{ appointmentDate }` (YYYY-MM-DD)
+- Returns open 30-min slots for that day, filtered against existing `upcoming` appointments
+- Response: `{ available, availableSlots, availableSlotsFormatted, message }` or `{ available: false, reason }`
+
+**`book-appointment/route.ts`**
+- Validates business hours using `lib/business-config.ts`
+- Writes via `createAppointment()` from `lib/appointments-db.ts`
+- Returns `{ success: true, appointmentId, message }` or `{ success: false, reason }`
+
+Both use `America/Toronto` timezone for all date validation.
+
+### ElevenLabs dynamic variables
+Use the correct system variable names:
+- `{{system__conversation_id}}` — conversation ID (not `{{conversation_id}}`)
+- `{{system__caller_id}}` — caller's phone number from Twilio (never ask the user for it)
+- `{{system__time}}` — current date/time for resolving relative dates
+
+### Components
+- Dashboard UI lives in `components/dashboard/` (sidebar, header)
+- Appointment UI lives in `components/appointments/` (card, list)
+- Real-time data flows through `hooks/use-appointments.ts` → `AppointmentsList` → `AppointmentCard`
+
+### Styling
+- Use CSS variables (`var(--primary)`, `var(--border)`, etc.) for theme-aware colors
+- Tailwind v4 — no `tailwind.config.js`, config is in `globals.css`
+- Light mode default (`defaultTheme="light"` in `theme-provider.tsx`)
+
+## Appointment Data Shape
+```ts
+{
+  id: string,
+  sessionId: string,        // system__conversation_id from ElevenLabs
+  customerName: string,
+  customerPhone: string,    // system__caller_id from Twilio
+  service: string,          // one of the services in business-config.ts
+  appointmentDate: string,  // "YYYY-MM-DD"
+  appointmentTime: string,  // "HH:MM" 24h
+  status: "upcoming" | "completed" | "cancelled",
+  notes: string,
+  createdAt: Timestamp
+}
+```

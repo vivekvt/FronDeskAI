@@ -1,0 +1,156 @@
+[
+{
+  "type": "webhook",
+  "name": "check_availability",
+        "description": "Checks which time slots are available on a given date. Call this as soon as the caller provides a date. Returns a list of available times (availableSlots in HH:MM and availableSlotsFormatted in 12h). If available is false, the day is closed or fully booked.",
+  "disable_interruptions": false,
+  "force_pre_tool_speech": "auto",
+  "tool_call_sound": null,
+  "tool_call_sound_behavior": "auto",
+  "tool_error_handling_mode": "auto",
+  "execution_mode": "immediate",
+  "api_schema": {
+    "url": "https://frondeskai-app.vercel.app/api/agent/check-availability",
+    "method": "POST",
+    "path_params_schema": [],
+    "query_params_schema": [],
+    "request_body_schema": {
+      "id": "body",
+      "type": "object",
+      "description": "Check availability request body",
+      "value_type": "llm_prompt",
+      "required": false,
+      "properties": [
+        {
+          "id": "appointmentDate",
+          "type": "string",
+          "value_type": "llm_prompt",
+          "description": "Date to check in YYYY-MM-DD format.",
+          "dynamic_variable": "",
+          "constant_value": "",
+          "enum": null,
+          "is_system_provided": false,
+          "required": true
+        }
+      ]
+    },
+    "request_headers": [],
+    "auth_connection": null
+  },
+  "assignments": [],
+  "response_timeout_secs": 20,
+  "dynamic_variables": {
+    "dynamic_variable_placeholders": {}
+  }
+},
+{
+  "type": "webhook",
+  "name": "book_appointment",
+  "description": "Books a service appointment for the caller. Call this only after you have collected and verbally confirmed all details with the customer (name, service, date, and time).",
+  "disable_interruptions": false,
+  "force_pre_tool_speech": "auto",
+  "tool_call_sound": null,
+  "tool_call_sound_behavior": "auto",
+  "tool_error_handling_mode": "auto",
+  "execution_mode": "immediate",
+  "api_schema": {
+    "url": "https://frondeskai-app.vercel.app/api/agent/book-appointment",
+    "method": "POST",
+    "path_params_schema": [],
+    "query_params_schema": [],
+    "request_body_schema": {
+      "id": "body",
+      "type": "object",
+      "description": "Book appointment request body",
+      "properties": [
+        {
+          "id": "session_id",
+          "type": "string",
+          "value_type": "llm_prompt",
+          "description": "Your session ID for this call. Use the value from SESSION_ID in your system prompt exactly as-is.",
+          "dynamic_variable": "",
+          "constant_value": "",
+          "enum": null,
+          "is_system_provided": false,
+          "required": true
+        },
+        {
+          "id": "customerPhone",
+          "type": "string",
+          "value_type": "llm_prompt",
+          "description": "The caller's phone number. Use the value from CALLER_PHONE in your system prompt exactly as-is.",
+          "dynamic_variable": "",
+          "constant_value": "",
+          "enum": null,
+          "is_system_provided": false,
+          "required": true
+        },
+        {
+          "id": "customerName",
+          "type": "string",
+          "value_type": "llm_prompt",
+          "description": "Full name of the customer as provided during the call.",
+          "dynamic_variable": "",
+          "constant_value": "",
+          "enum": null,
+          "is_system_provided": false,
+          "required": true
+        },
+        {
+          "id": "service",
+          "type": "string",
+          "value_type": "llm_prompt",
+          "description": "The service being booked: Haircut, Beard Trim, Hot Towel Shave, or Haircut & Beard Combo.",
+          "dynamic_variable": "",
+          "constant_value": "",
+          "enum": ["Haircut", "Beard Trim", "Hot Towel Shave", "Haircut & Beard Combo"],
+          "is_system_provided": false,
+          "required": true
+        },
+        {
+          "id": "appointmentDate",
+          "type": "string",
+          "value_type": "llm_prompt",
+          "description": "Date of the appointment in YYYY-MM-DD format.",
+          "dynamic_variable": "",
+          "constant_value": "",
+          "enum": null,
+          "is_system_provided": false,
+          "required": true
+        },
+        {
+          "id": "appointmentTime",
+          "type": "string",
+          "value_type": "llm_prompt",
+          "description": "Time of the appointment in HH:MM 24-hour format (e.g. 14:30 for 2:30 PM).",
+          "dynamic_variable": "",
+          "constant_value": "",
+          "enum": null,
+          "is_system_provided": false,
+          "required": true
+        },
+        {
+          "id": "notes",
+          "type": "string",
+          "value_type": "llm_prompt",
+          "description": "Any additional notes or special requests from the customer. Optional.",
+          "dynamic_variable": "",
+          "constant_value": "",
+          "enum": null,
+          "is_system_provided": false,
+          "required": false
+        }
+      ],
+      "required": false,
+      "value_type": "llm_prompt"
+    },
+    "request_headers": [],
+    "auth_connection": null
+  },
+  "assignments": [],
+  "response_timeout_secs": 20,
+  "dynamic_variables": {
+    "dynamic_variable_placeholders": {}
+  }
+}
+]
